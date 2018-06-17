@@ -10,6 +10,14 @@ ssh-keygen -t rsa -b 4096 -C "dev@dev.dev" -f vsnd-backend-dev-github-id-rsa
 
 #### Gen. secrets in openShift
 ```
-todo
+oc create secret generic vsnd-frontend-dev-github-secret --from-file=ssh-privatekey=vsnd-frontend-dev-github-id-rsa --type=kubernetes.io/ssh-auth
+
+oc secrets add serviceaccount/builder vsnd-frontend-dev-github-secret
+
+oc new-app git@github.com:linuxbender/vsnd-frontend.git --strategy=docker
+
+oc set build-secret --source vsnd-frontend vsnd-frontend-dev-github-secret
+
+oc start-build vsnd-frontend
 ```
 
